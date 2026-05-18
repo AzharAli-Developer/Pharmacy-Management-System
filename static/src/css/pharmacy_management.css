@@ -1,0 +1,739 @@
+.o_kanban_view .pharmacy_kanban_card {
+    min-height: 130px;
+    padding: 18px;
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(20, 38, 65, 0.08);
+    text-align: center;
+}
+
+.o_kanban_view .pharmacy_kanban_title {
+    display: block;
+    margin-bottom: 8px;
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.o_kanban_view .pharmacy_kanban_description,
+.o_kanban_view .pharmacy_kanban_line {
+    color: #5f6b7a;
+    font-size: 13px;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.o_pharmacy_dashboard .o_kanban_record {
+    width: 100%;
+}
+
+.pharmacy_dashboard_wrap {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 16px;
+    width: 100%;
+    padding: 12px;
+}
+
+.pharmacy_dashboard_card {
+    min-height: 145px;
+    border-radius: 8px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(20, 38, 65, 0.14);
+}
+
+.pharmacy_dashboard_card_categories {
+    background: #2563eb;
+}
+
+.pharmacy_dashboard_card_medicines {
+    background: #059669;
+}
+
+.pharmacy_dashboard_card_patients {
+    background: #dc2626;
+}
+
+.pharmacy_dashboard_count {
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.pharmacy_dashboard_title {
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+    .pharmacy_dashboard_wrap {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pharmacy_order_screen,
+.pharmacy_dashboard_screen {
+    height: calc(100vh - 90px);
+    padding: 20px;
+    background: #f5f7fb;
+    color: #1f2937;
+    overflow: auto;
+}
+
+.pharmacy_order_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.pharmacy_search_box {
+    flex: 0 0 320px;
+}
+
+.pharmacy_search_box input,
+.pharmacy_customer_input,
+.pharmacy_dashboard_filters input {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+    padding: 0 10px;
+    background: #ffffff;
+    color: #1f2937;
+    margin: 4px 0px;
+}
+
+.pharmacy_category_filter {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pharmacy_category_filter button,
+.pharmacy_dashboard_filters button {
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+    padding: 8px 13px;
+    background: #ffffff;
+    color: #374151;
+    font-weight: 600;
+}
+
+.pharmacy_category_filter button.active,
+.pharmacy_dashboard_filters button.active {
+    border-color: #2563eb;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.pharmacy_order_body {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 18px;
+    align-items: start;
+}
+
+.pharmacy_medicine_panel,
+.pharmacy_cart_panel,
+.pharmacy_dashboard_section {
+    border: 1px solid #e1e7ef;
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(20, 38, 65, 0.08);
+}
+
+.pharmacy_medicine_panel {
+    padding: 16px;
+}
+
+.pharmacy_medicine_grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.pharmacy_order_medicine_card {
+    min-height: 145px;
+    border: 1px solid #e1e7ef;
+    border-radius: 8px;
+    padding: 16px;
+    background: #ffffff;
+    text-align: left;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.pharmacy_order_medicine_card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.14);
+    transform: translateY(-1px);
+}
+
+.pharmacy_order_medicine_name {
+    min-height: 44px;
+    color: #111827;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.pharmacy_order_medicine_category {
+    margin-top: 8px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.pharmacy_order_medicine_meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 16px;
+    color: #0f766e;
+    font-weight: 700;
+}
+
+.pharmacy_cart_panel {
+    position: relative;
+    padding: 8px;
+}
+
+.pharmacy_cart_title {
+    margin-bottom: 5px;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.pharmacy_cart_title_row,
+.pharmacy_cart_line_name_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.pharmacy_discount_open {
+    padding: 8px 11px;
+}
+
+.pharmacy_cart_lines {
+    display: grid;
+    gap: 10px;
+    height: 52vh;
+    margin-top: 10px;
+    align-content: start;
+    overflow-y: auto;
+}
+
+.pharmacy_cart_line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid #e1e7ef;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.pharmacy_cart_line_name {
+    font-weight: 800;
+}
+
+/* .pharmacy_remove_line {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+    border: 0;
+    border-radius: 50%;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-weight: 900;
+    line-height: 1;
+} */
+
+.pharmacy_cart_line_price {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.pharmacy_line_discount_input {
+    width: 120px;
+    height: 30px;
+    margin-top: 6px;
+    border: 1px solid #d8dee6;
+    border-radius: 6px;
+    padding: 0 8px;
+    background: #ffffff;
+    font-size: 12px;
+}
+
+.pharmacy_qty_controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pharmacy_qty_controls button {
+    width: 30px;
+    height: 30px;
+    border: 0;
+    border-radius: 8px;
+    background: #e0ecff;
+    color: #1d4ed8;
+    font-weight: 800;
+}
+
+.pharmacy_qty_controls span {
+    min-width: 22px;
+    text-align: center;
+    font-weight: 800;
+}
+
+.pharmacy_cart_line_total {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    grid-column: 1 / -1;
+    color: #111827;
+    font-weight: 800;
+}
+
+.pharmacy_cart_total {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 6px;
+    margin-top: 6px;
+    border-top: 1px solid #e1e7ef;
+    font-size: 18px;
+}
+
+.pharmacy_cart_actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.pharmacy_btn_secondary,
+.pharmacy_btn_primary {
+    border: 0;
+    border-radius: 8px;
+    padding: 11px 12px;
+    font-weight: 800;
+}
+
+.pharmacy_btn_secondary {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.pharmacy_btn_primary {
+    background: #059669;
+    color: #ffffff;
+}
+
+.pharmacy_cart_empty,
+.pharmacy_empty_state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    color: #64748b;
+    text-align: center;
+}
+
+.pharmacy_dashboard_top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.pharmacy_dashboard_top h2 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.pharmacy_dashboard_top p {
+    margin: 4px 0 0;
+    color: #64748b;
+}
+
+.pharmacy_dashboard_filters {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pharmacy_dashboard_filters input {
+    width: 150px;
+}
+
+.pharmacy_stats_grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.pharmacy_stat_card {
+    min-height: 118px;
+    border: 1px solid #e1e7ef;
+    border-radius: 8px;
+    padding: 16px;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(20, 38, 65, 0.08);
+    text-align: left;
+}
+
+.pharmacy_stat_card span {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.pharmacy_stat_card strong {
+    display: block;
+    margin-top: 16px;
+    color: #111827;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.pharmacy_dashboard_content {
+    display: grid;
+    gap: 18px;
+}
+
+.pharmacy_dashboard_section {
+    padding: 18px;
+}
+
+.pharmacy_dashboard_section h3 {
+    margin: 0 0 16px;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.pharmacy_sales_chart {
+    display: grid;
+    gap: 10px;
+    min-height: 220px;
+    overflow-x: auto;
+}
+
+.pharmacy_chartjs_wrap {
+    position: relative;
+    height: 320px;
+    min-height: 320px;
+    padding: 14px;
+    border: 1px solid #e1e7ef;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.pharmacy_chartjs_wrap canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.pharmacy_expiry_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    overflow-y: auto;
+}
+
+.pharmacy_expiry_list {
+    display: grid;
+    gap: 10px;
+}
+
+.pharmacy_expiry_row {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e1e7ef;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: inherit;
+    text-align: left;
+}
+
+.pharmacy_expiry_row:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+}
+
+.pharmacy_expiry_row strong,
+.pharmacy_expiry_row span,
+.pharmacy_expiry_row small {
+    display: block;
+}
+
+.pharmacy_expiry_row span,
+.pharmacy_expiry_row small {
+    color: #64748b;
+}
+
+.pharmacy_modal_backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(15, 23, 42, 0.42);
+}
+
+.pharmacy_modal {
+    width: min(720px, 100%);
+    max-height: 86vh;
+    overflow: auto;
+    border-radius: 8px;
+    border: 1px solid #e1e7ef;
+    background: #ffffff;
+    box-shadow: 0 22px 60px rgba(15, 23, 42, 0.24);
+    padding: 18px;
+}
+
+.pharmacy_discount_modal,
+.pharmacy_confirm_modal {
+    width: min(420px, 100%);
+}
+
+.pharmacy_ai_modal {
+    width: min(780px, 100%);
+}
+
+.pharmacy_modal_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.pharmacy_modal_header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.pharmacy_icon_btn {
+    width: 32px;
+    height: 32px;
+    border: 0;
+    border-radius: 50%;
+    background: #e5e7eb;
+    color: #111827;
+    font-weight: 900;
+}
+
+.pharmacy_report_period_grid,
+.pharmacy_discount_mode_grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.pharmacy_report_period_grid button,
+.pharmacy_discount_mode_grid button {
+    min-height: 92px;
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+    background: #f8fafc;
+    color: #111827;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.pharmacy_discount_mode_grid button.active,
+.pharmacy_report_period_grid button:hover {
+    border-color: #059669;
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.pharmacy_custom_report_form,
+.pharmacy_discount_entry {
+    display: grid;
+    gap: 12px;
+}
+
+.pharmacy_custom_report_form input,
+.pharmacy_discount_entry input {
+    height: 42px;
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+    padding: 0 10px;
+}
+
+.pharmacy_report_range,
+.pharmacy_report_total,
+.pharmacy_modal_actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.pharmacy_report_table_wrap {
+    max-height: 320px;
+    margin: 14px 0;
+    overflow: auto;
+    border: 1px solid #e1e7ef;
+    border-radius: 8px;
+}
+
+.pharmacy_report_table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pharmacy_report_table th,
+.pharmacy_report_table td {
+    padding: 9px 10px;
+    border-bottom: 1px solid #e1e7ef;
+    text-align: left;
+}
+
+.pharmacy_report_table th {
+    background: #f8fafc;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.pharmacy_report_total {
+    padding-top: 10px;
+    border-top: 1px solid #e1e7ef;
+    font-size: 18px;
+}
+
+.pharmacy_modal_actions {
+    margin-top: 16px;
+}
+
+.pharmacy_ai_help_btn {
+    border-color: #7c3aed !important;
+    background: #7c3aed !important;
+    color: #ffffff !important;
+}
+
+.pharmacy_ai_intro {
+    margin: 0 0 12px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.pharmacy_ai_chat_history {
+    display: grid;
+    gap: 10px;
+    min-height: 220px;
+    max-height: 360px;
+    padding: 14px;
+    overflow-y: auto;
+    border: 1px solid #e1e7ef;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.pharmacy_ai_message {
+    display: grid;
+    gap: 4px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}
+
+.pharmacy_ai_message strong {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.pharmacy_ai_message_user {
+    justify-self: end;
+    max-width: 82%;
+    background: #ede9fe;
+    color: #312e81;
+}
+
+.pharmacy_ai_message_assistant {
+    justify-self: start;
+    max-width: 88%;
+    background: #ffffff;
+    color: #1f2937;
+    border: 1px solid #e1e7ef;
+}
+
+.pharmacy_ai_input {
+    width: 100%;
+    min-height: 76px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    resize: vertical;
+    border: 1px solid #d8dee6;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+}
+
+.pharmacy_ai_actions {
+    justify-content: flex-start;
+}
+
+.pharmacy_ai_actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+@media (max-width: 1200px) {
+    .pharmacy_stats_grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .pharmacy_order_body,
+    .pharmacy_expiry_grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767px) {
+    .pharmacy_order_header,
+    .pharmacy_dashboard_top {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .pharmacy_search_box {
+        flex: 1 1 auto;
+    }
+
+    .pharmacy_medicine_grid,
+    .pharmacy_stats_grid {
+        grid-template-columns: 1fr;
+    }
+}

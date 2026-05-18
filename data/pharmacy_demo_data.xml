@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="category_pain_relief" model="pharmacy.category">
+        <field name="name">Pain Relief</field>
+        <field name="description">Medicines used for pain and fever.</field>
+    </record>
+
+    <record id="category_antibiotic" model="pharmacy.category">
+        <field name="name">Antibiotic</field>
+        <field name="description">Prescription antibiotic medicines.</field>
+    </record>
+
+    <record id="supplier_city_medical" model="pharmacy.supplier">
+        <field name="name">City Medical Supplier</field>
+        <field name="contact_person">Main Office</field>
+        <field name="phone">0300-0000000</field>
+        <field name="email">supplier@example.com</field>
+    </record>
+
+    <record id="medicine_paracetamol" model="pharmacy.medicine">
+        <field name="name">Paracetamol 500mg</field>
+        <field name="category_id" ref="category_pain_relief"/>
+        <field name="sale_price">25.0</field>
+        <field name="stock">100</field>
+    </record>
+
+    <record id="medicine_amoxicillin" model="pharmacy.medicine">
+        <field name="name">Amoxicillin 250mg</field>
+        <field name="category_id" ref="category_antibiotic"/>
+        <field name="sale_price">120.0</field>
+        <field name="stock">50</field>
+    </record>
+
+    <record id="expense_tea_sample" model="pharmacy.expense">
+        <field name="name">Tea</field>
+        <field name="expense_type">tea</field>
+        <field name="amount">300.0</field>
+    </record>
+</odoo>

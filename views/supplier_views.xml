@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pharmacy_supplier_list" model="ir.ui.view">
+        <field name="name">pharmacy.supplier.list</field>
+        <field name="model">pharmacy.supplier</field>
+        <field name="arch" type="xml">
+            <list string="Suppliers">
+                <field name="name"/>
+                <field name="contact_person"/>
+                <field name="phone"/>
+                <field name="email"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_supplier_form" model="ir.ui.view">
+        <field name="name">pharmacy.supplier.form</field>
+        <field name="model">pharmacy.supplier</field>
+        <field name="arch" type="xml">
+            <form string="Supplier">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="contact_person"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="address"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_supplier_kanban" model="ir.ui.view">
+        <field name="name">pharmacy.supplier.kanban</field>
+        <field name="model">pharmacy.supplier</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="pharmacy_kanban_card">
+                            <strong class="pharmacy_kanban_title"><field name="name"/></strong>
+                            <div class="pharmacy_kanban_line"><field name="phone"/></div>
+                            <div class="pharmacy_kanban_line"><field name="email"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_supplier" model="ir.actions.act_window">
+        <field name="name">Suppliers</field>
+        <field name="res_model">pharmacy.supplier</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>

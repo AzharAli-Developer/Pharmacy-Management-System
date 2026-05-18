@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="menu_pharmacy_root"
+        name="Pharmacy Management"
+        sequence="10"
+        groups="pharmacy_management_system.group_owner,pharmacy_management_system.group_employee"
+    />
+
+    <menuitem
+        id="menu_pharmacy_dashboard"
+        name="Dashboard"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_dashboard_client"
+        sequence="5"
+    />
+
+    <menuitem
+        id="menu_pharmacy_orders"
+        name="Orders"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_orders_client"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_pharmacy_medicine"
+        name="Medicines"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_medicine"
+        sequence="20"
+    />
+
+    <menuitem
+        id="menu_pharmacy_category"
+        name="Categories"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_category"
+        sequence="25"
+    />
+
+    <menuitem
+        id="menu_pharmacy_supplier"
+        name="Suppliers"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_supplier"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_pharmacy_purchase"
+        name="Purchases"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_purchase"
+        sequence="40"
+    />
+
+    <menuitem
+        id="menu_pharmacy_sale"
+        name="Sales"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_sale"
+        sequence="50"
+    />
+
+    <menuitem
+        id="menu_pharmacy_expense"
+        name="Expenses"
+        parent="menu_pharmacy_root"
+        action="action_pharmacy_expense"
+        sequence="60"
+    />
+</odoo>

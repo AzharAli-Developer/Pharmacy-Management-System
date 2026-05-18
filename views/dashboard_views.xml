@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pharmacy_dashboard_kanban" model="ir.ui.view">
+        <field name="name">pharmacy.dashboard.kanban</field>
+        <field name="model">pharmacy.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_pharmacy_dashboard">
+                <field name="category_count"/>
+                <field name="medicine_count"/>
+                <field name="patient_count"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="pharmacy_dashboard_wrap">
+                            <div class="pharmacy_dashboard_card pharmacy_dashboard_card_categories">
+                                <div class="pharmacy_dashboard_count">
+                                    <field name="category_count"/>
+                                </div>
+                                <div class="pharmacy_dashboard_title">Categories</div>
+                            </div>
+                            <div class="pharmacy_dashboard_card pharmacy_dashboard_card_medicines">
+                                <div class="pharmacy_dashboard_count">
+                                    <field name="medicine_count"/>
+                                </div>
+                                <div class="pharmacy_dashboard_title">Medicines</div>
+                            </div>
+                            <div class="pharmacy_dashboard_card pharmacy_dashboard_card_patients">
+                                <div class="pharmacy_dashboard_count">
+                                    <field name="patient_count"/>
+                                </div>
+                                <div class="pharmacy_dashboard_title">Patients</div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">pharmacy.dashboard</field>
+        <field name="view_mode">kanban</field>
+        <field name="domain" eval="[('id', '=', ref('pharmacy_management_system.pharmacy_dashboard_main'))]"/>
+        <field name="context" eval="{'create': False, 'edit': False, 'delete': False}"/>
+    </record>
+
+    <record id="action_pharmacy_dashboard_client" model="ir.actions.client">
+        <field name="name">Dashboard</field>
+        <field name="tag">pharmacy_dashboard</field>
+    </record>
+
+    <record id="action_pharmacy_orders_client" model="ir.actions.client">
+        <field name="name">Orders</field>
+        <field name="tag">pharmacy_orders</field>
+    </record>
+</odoo>

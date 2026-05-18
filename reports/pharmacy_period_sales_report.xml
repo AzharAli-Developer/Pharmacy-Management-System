@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_pharmacy_period_sales" model="ir.actions.report">
+        <field name="name">Pharmacy Sales Period Report</field>
+        <field name="model">pharmacy.period.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pharmacy_management_system.report_pharmacy_period_sales</field>
+        <field name="report_file">pharmacy_management_system.report_pharmacy_period_sales</field>
+        <field name="print_report_name">'Pharmacy Sales Report'</field>
+    </record>
+
+    <template id="report_pharmacy_period_sales">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <div class="page">
+                    <h2>Pharmacy Sales Report</h2>
+                    <p>
+                        <strong>From:</strong>
+                        <t t-esc="wizard.date_from"/>
+                        <strong style="margin-left: 16px;">To:</strong>
+                        <t t-esc="wizard.date_to"/>
+                    </p>
+                    <table class="table table-sm o_main_table">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Medicine Record</th>
+                                <th class="text-end">Total Bill</th>
+                                <th class="text-end">Discount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="wizard.get_report_lines()" t-as="line">
+                                <td><t t-esc="line['patient']"/></td>
+                                <td><t t-esc="line['medicines']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % line['gross_amount']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % line['discount_amount']"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 18px; text-align: right; font-size: 18px;">
+                        <div><strong>Gross Bill: <t t-esc="'%.2f' % wizard.gross_bill"/></strong></div>
+                        <div><strong>Discount: <t t-esc="'%.2f' % wizard.total_discount"/></strong></div>
+                        <div><strong>Expense: <t t-esc="'%.2f' % wizard.total_expense"/></strong></div>
+                        <div><strong>Total Amount: <t t-esc="'%.2f' % wizard.total_amount"/></strong></div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

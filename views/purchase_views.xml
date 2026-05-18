@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pharmacy_purchase_list" model="ir.ui.view">
+        <field name="name">pharmacy.purchase.list</field>
+        <field name="model">pharmacy.purchase</field>
+        <field name="arch" type="xml">
+            <list string="Purchases">
+                <field name="name"/>
+                <field name="supplier_id"/>
+                <field name="purchase_date"/>
+                <field name="total_amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_purchase_form" model="ir.ui.view">
+        <field name="name">pharmacy.purchase.form</field>
+        <field name="model">pharmacy.purchase</field>
+        <field name="arch" type="xml">
+            <form string="Purchase">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="supplier_id"/>
+                        </group>
+                        <group>
+                            <field name="purchase_date"/>
+                            <field name="state"/>
+                            <field name="total_amount" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Medicines">
+                            <field name="medicine_ids">
+                                <list editable="bottom">
+                                    <field name="medicine_id"/>
+                                    <field name="quantity"/>
+                                    <field name="price"/>
+                                    <field name="subtotal" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_purchase_kanban" model="ir.ui.view">
+        <field name="name">pharmacy.purchase.kanban</field>
+        <field name="model">pharmacy.purchase</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="supplier_id"/>
+                <field name="total_amount"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="pharmacy_kanban_card">
+                            <strong class="pharmacy_kanban_title"><field name="name"/></strong>
+                            <div class="pharmacy_kanban_line"><field name="supplier_id"/></div>
+                            <div class="pharmacy_kanban_line">Total: <field name="total_amount"/></div>
+                            <div class="pharmacy_kanban_line"><field name="state"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_purchase_search" model="ir.ui.view">
+        <field name="name">pharmacy.purchase.search</field>
+        <field name="model">pharmacy.purchase</field>
+        <field name="arch" type="xml">
+            <search string="Search Purchases">
+                <field name="name"/>
+                <field name="supplier_id"/>
+                <field name="purchase_date"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_supplier" string="Supplier" context="{'group_by': 'supplier_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_purchase" model="ir.actions.act_window">
+        <field name="name">Purchases</field>
+        <field name="res_model">pharmacy.purchase</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>

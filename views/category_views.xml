@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pharmacy_category_list" model="ir.ui.view">
+        <field name="name">pharmacy.category.list</field>
+        <field name="model">pharmacy.category</field>
+        <field name="arch" type="xml">
+            <list string="Medicine Categories">
+                <field name="name"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_category_form" model="ir.ui.view">
+        <field name="name">pharmacy.category.form</field>
+        <field name="model">pharmacy.category</field>
+        <field name="arch" type="xml">
+            <form string="Medicine Category">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_category_kanban" model="ir.ui.view">
+        <field name="name">pharmacy.category.kanban</field>
+        <field name="model">pharmacy.category</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="description"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="pharmacy_kanban_card">
+                            <strong class="pharmacy_kanban_title">
+                                <field name="name"/>
+                            </strong>
+                            <div class="pharmacy_kanban_description"><field name="description"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_category_search" model="ir.ui.view">
+        <field name="name">pharmacy.category.search</field>
+        <field name="model">pharmacy.category</field>
+        <field name="arch" type="xml">
+            <search string="Search Categories">
+                <field name="name"/>
+                <filter name="active" string="Active" domain="[('active', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_category" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">pharmacy.category</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>

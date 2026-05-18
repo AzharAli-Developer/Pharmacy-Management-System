@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pharmacy_sale_list" model="ir.ui.view">
+        <field name="name">pharmacy.sale.list</field>
+        <field name="model">pharmacy.sale</field>
+        <field name="arch" type="xml">
+            <list string="Sales">
+                <field name="name"/>
+                <field name="customer_name"/>
+                <field name="sale_date"/>
+                <field name="sub_total_amount"/>
+                <field name="total_discount_amount"/>
+                <field name="total_amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_sale_form" model="ir.ui.view">
+        <field name="name">pharmacy.sale.form</field>
+        <field name="model">pharmacy.sale</field>
+        <field name="arch" type="xml">
+            <form string="Sale">
+                <header>
+                    <button name="action_print_bill" type="object" string="Print Bill" class="btn-primary"/>
+                    <button name="action_download_bill" type="object" string="Download Bill"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="customer_name"/>
+                        </group>
+                        <group>
+                            <field name="sale_date"/>
+                            <field name="state"/>
+                            <field name="sub_total_amount" readonly="1"/>
+                            <field name="total_discount_amount" readonly="1"/>
+                            <field name="total_amount" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Medicines">
+                            <field name="medicine_ids">
+                                <list editable="bottom">
+                                    <field name="medicine_id"/>
+                                    <field name="quantity"/>
+                                    <field name="price"/>
+                                    <field name="discount_amount"/>
+                                    <field name="subtotal" readonly="1"/>
+                                    <field name="total_amount" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_sale_kanban" model="ir.ui.view">
+        <field name="name">pharmacy.sale.kanban</field>
+        <field name="model">pharmacy.sale</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="customer_name"/>
+                <field name="sub_total_amount"/>
+                <field name="state"/>
+                <field name="total_discount_amount"/>
+                <field name="total_amount"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="pharmacy_kanban_card">
+                            <strong class="pharmacy_kanban_title">
+                                <field name="customer_name"/>
+                            </strong>
+
+
+                            <div class="pharmacy_kanban_line">Total: <field name="total_amount"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_sale_search" model="ir.ui.view">
+        <field name="name">pharmacy.sale.search</field>
+        <field name="model">pharmacy.sale</field>
+        <field name="arch" type="xml">
+            <search string="Search Sales">
+                <field name="name"/>
+                <field name="customer_name"/>
+                <field name="sale_date"/>
+                <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_sale" model="ir.actions.act_window">
+        <field name="name">Sales / POS Orders</field>
+        <field name="res_model">pharmacy.sale</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>

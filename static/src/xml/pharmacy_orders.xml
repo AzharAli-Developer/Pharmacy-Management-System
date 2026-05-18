@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="pharmacy_management_system.PharmacyOrders">
+        <div class="pharmacy_order_screen">
+            <div class="pharmacy_order_header">
+                <div class="pharmacy_search_box">
+                    <input type="text" placeholder="Search medicines..." t-att-value="state.search" t-on-input="onSearch"/>
+                </div>
+                <div class="pharmacy_category_filter">
+                    <t t-foreach="state.categories" t-as="category" t-key="category.id">
+                        <button t-att-class="state.categoryId === category.id ? 'active' : ''" t-on-click="() => this.setCategory(category.id)">
+                            <t t-esc="category.name"/>
+                        </button>
+                    </t>
+                </div>
+            </div>
+
+            <div class="pharmacy_order_body">
+                <section class="pharmacy_medicine_panel">
+                    <t t-if="state.loading">
+                        <div class="pharmacy_empty_state">Loading medicines...</div>
+                    </t>
+                    <t t-elif="!filteredMedicines.length">
+                        <div class="pharmacy_empty_state">No medicines found.</div>
+                    </t>
+                    <t t-else="">
+                        <div class="pharmacy_medicine_grid">
+                            <t t-foreach="filteredMedicines" t-as="medicine" t-key="medicine.id">
+                                <button class="pharmacy_order_medicine_card" t-on-click="() => this.addToCart(medicine)">
+                                    <div class="pharmacy_order_medicine_name">
+                                        <t t-esc="medicine.name"/>
+                                    </div>
+                                    <div class="pharmacy_order_medicine_category">
+                                        <t t-esc="medicine.category_id[1]"/>
+                                    </div>
+                                    <div class="pharmacy_order_medicine_meta">
+                                        <span>Rs. <t t-esc="medicine.sale_price"/>
+                                        </span>
+                                        <span>Stock: <t t-esc="medicine.stock"/>
+                                        </span>
+                                    </div>
+                                </button>
+                            </t>
+                        </div>
+                    </t>
+                </section>
+
+                <aside class="pharmacy_cart_panel">
+                    <div class="pharmacy_cart_title_row">
+                        <div class="pharmacy_cart_title">Current Order</div>
+                        <button class="pharmacy_btn_secondary pharmacy_discount_open" t-on-click="openDiscountModal">Discount</button>
+                    </div>
+                    <input class="pharmacy_customer_input" type="text" placeholder="Customer name" t-model="state.customerName"/>
+
+                    <div class="pharmacy_cart_lines">
+                        <t t-if="!state.cart.length">
+                            <div class="pharmacy_cart_empty">Click a medicine to add it to cart.</div>
+                        </t>
+                        <t t-foreach="state.cart" t-as="line" t-key="line.medicine_id">
+                            <div class="pharmacy_cart_line">
+                                <div>
+                                    <div class="pharmacy_cart_line_name_row">
+                                        <div class="pharmacy_cart_line_name">
+                                            <t t-esc="line.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="pharmacy_cart_line_price">Rs. <t t-esc="line.price"/>
+                                    </div>
+                                    <input class="pharmacy_line_discount_input" type="number" min="0" placeholder="Item discount" t-att-value="line.discount_amount" t-on-input="(ev) => this.updateLineDiscount(line, ev)"/>
+                                </div>
+                                <div class="pharmacy_qty_controls">
+                                    <button t-on-click="() => this.decreaseQty(line)">-</button>
+                                    <span>
+                                        <t t-esc="line.quantity"/>
+                                    </span>
+                                    <button t-on-click="() => this.increaseQty(line)">+</button>
+                                    <button style="color: red;" t-on-click="() => this.removeLine(line)">X</button>
+                                </div>
+                                <div class="pharmacy_cart_line_total">
+                                    <span>Total</span>
+                                    <strong>Rs. <t t-esc="getLineTotal(line)"/>
+                                    </strong>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div class="pharmacy_cart_footer">
+                        <div class="pharmacy_cart_total">
+                            <span>Sub-Total</span>
+                            <strong>Rs. <t t-esc="subTotal"/>
+                            </strong>
+                        </div>
+                        <div class="pharmacy_cart_total">
+                            <span>Discount</span>
+                            <strong>Rs. <t t-esc="totalDiscount"/>
+                            </strong>
+                        </div>
+                        <div class="pharmacy_cart_total">
+                            <span>Total</span>
+                            <strong>Rs. <t t-esc="getTotal"/>
+                            </strong>
+                        </div>
+                        <div class="pharmacy_cart_actions">
+                            <button class="pharmacy_btn_secondary" t-on-click="cancelOrder">Cancel</button>
+                            <button class="pharmacy_btn_primary" t-on-click="confirmOrder">Confirm Order</button>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <t t-if="state.showDiscountModal">
+                <div class="pharmacy_modal_backdrop">
+                    <div class="pharmacy_modal pharmacy_discount_modal">
+                        <div class="pharmacy_modal_header">
+                            <h3>Discount</h3>
+                            <button class="pharmacy_icon_btn" t-on-click="closeDiscountModal">x</button>
+                        </div>
+                        <div class="pharmacy_discount_mode_grid">
+                            <button t-att-class="state.discountMode === 'fixed' ? 'active' : ''" t-on-click="selectFixedDiscount">Fixed Discount</button>
+                            <button t-att-class="state.discountMode === 'percent' ? 'active' : ''" t-on-click="selectPercentDiscount">% Discount</button>
+                        </div>
+                        <div class="pharmacy_discount_entry" t-if="state.discountMode === 'fixed'">
+                            <input type="number" min="0" placeholder="Fixed discount amount" t-model="state.fdiscount"/>
+                            <button class="pharmacy_btn_primary" t-on-click="applyDiscount">Apply</button>
+                        </div>
+                        <div class="pharmacy_discount_entry" t-if="state.discountMode === 'percent'">
+                            <input type="number" min="0" max="100" placeholder="Discount percentage" t-model="state.pdiscount"/>
+                            <button class="pharmacy_btn_primary" t-on-click="applyDiscount">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <t t-if="state.showCancelConfirm">
+                <div class="pharmacy_modal_backdrop">
+                    <div class="pharmacy_modal pharmacy_confirm_modal">
+                        <div class="pharmacy_modal_header">
+                            <h3>Confirm to cancel?</h3>
+                        </div>
+                        <div class="pharmacy_modal_actions">
+                            <button class="pharmacy_btn_secondary" t-on-click="closeCancelConfirm">No</button>
+                            <button class="pharmacy_btn_primary" t-on-click="clearOrder">Yes</button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

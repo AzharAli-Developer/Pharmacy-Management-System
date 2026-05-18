@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_pharmacy_sale_receipt" model="ir.actions.report">
+        <field name="name">Pharmacy Bill Receipt</field>
+        <field name="model">pharmacy.sale</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pharmacy_management_system.report_pharmacy_sale_receipt</field>
+        <field name="report_file">pharmacy_management_system.report_pharmacy_sale_receipt</field>
+        <field name="print_report_name">'Receipt - %s' % (object.name)</field>
+    </record>
+
+    <template id="pharmacy_receipt_body">
+        <div class="pharmacy_receipt">
+            <style>
+                .pharmacy_receipt { width: 78mm; margin: 0 auto; color: #000; font-family: Arial, sans-serif; font-size: 12px; }
+                .pharmacy_receipt h2 { margin: 0; font-size: 18px; text-align: center; }
+                .pharmacy_receipt .center { text-align: center; }
+                .pharmacy_receipt .muted { font-size: 11px; }
+                .pharmacy_receipt .line { border-top: 1px solid #000; margin: 9px 0; }
+                .pharmacy_receipt .row { display: flex; justify-content: space-between; gap: 8px; }
+                .pharmacy_receipt table { width: 100%; border-collapse: collapse; }
+                .pharmacy_receipt th { border-top: 1px solid #000; border-bottom: 1px solid #000; padding: 5px 2px; font-size: 10px; text-align: right; }
+                .pharmacy_receipt td { border-bottom: 1px solid #d8d8d8; padding: 5px 2px; font-size: 10px; text-align: right; }
+                .pharmacy_receipt th:first-child, .pharmacy_receipt td:first-child { text-align: left; }
+                .pharmacy_receipt .total { font-size: 14px; font-weight: 700; padding: 6px 0; }
+            </style>
+            <h2>Pharmacy Management System</h2>
+            <div class="center">Ph:0123456789</div>
+            <div class="center muted">Main Pharmacy Branch Bahawalpur</div>
+            <div class="line"/>
+            <h2><t t-esc="sale.name"/></h2>
+            <div class="row">
+                <span>Date / Time</span>
+                <strong><t t-esc="sale.sale_date"/>  <t t-esc="sale.create_date and sale.create_date.strftime('%H:%M') or ''"/></strong>
+            </div>
+            <div class="row">
+                <span>Customer</span>
+                <strong><t t-esc="sale.customer_name or 'Walk-in Customer'"/></strong>
+            </div>
+            <div class="line"/>
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>QTY</th>
+                        <th>PRICE</th>
+                        <th>DISC</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="sale.medicine_ids" t-as="line">
+                        <td><strong><t t-esc="line.medicine_id.name"/></strong></td>
+                        <td><t t-esc="line.quantity"/></td>
+                        <td><t t-esc="'%.2f' % line.price"/></td>
+                        <td><t t-esc="'%.2f' % line.discount_amount"/></td>
+                        <td><t t-esc="'%.2f' % line.total_amount"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row total">
+                <span>Gross Bill</span>
+                <span><t t-esc="'%.2f' % sale.sub_total_amount"/></span>
+            </div>
+            <div class="row total">
+                <span>Discount</span>
+                <span><t t-esc="'%.2f' % sale.total_discount_amount"/></span>
+            </div>
+            <div class="row total">
+                <span>Total Bill</span>
+                <span><t t-esc="'%.2f' % sale.total_amount"/></span>
+            </div>
+            <div class="line"/>
+            <div class="center"><strong>Thank you for your visit!</strong></div>
+            <div class="center muted">Designed and developed by Enigmatix, Bahawalpur</div>
+        </div>
+    </template>
+
+    <template id="report_pharmacy_sale_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="sale">
+                <t t-call="pharmacy_management_system.pharmacy_receipt_body"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="pharmacy_sale_receipt_print_page">
+        <html>
+            <head>
+                <title><t t-esc="sale.name"/> Receipt</title>
+                <script>
+                    window.addEventListener('load', function () { window.print(); });
+                </script>
+            </head>
+            <body>
+                <t t-call="pharmacy_management_system.pharmacy_receipt_body"/>
+            </body>
+        </html>
+    </template>
+</odoo>

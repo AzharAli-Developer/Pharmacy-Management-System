@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pharmacy_medicine_list" model="ir.ui.view">
+        <field name="name">pharmacy.medicine.list</field>
+        <field name="model">pharmacy.medicine</field>
+        <field name="arch" type="xml">
+            <list string="Medicines">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="sale_price"/>
+                <field name="stock"/>
+                <field name="expiry_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_medicine_form" model="ir.ui.view">
+        <field name="name">pharmacy.medicine.form</field>
+        <field name="model">pharmacy.medicine</field>
+        <field name="arch" type="xml">
+            <form string="Medicine">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id"/>
+                        </group>
+                        <group>
+                            <field name="sale_price"/>
+                            <field name="expiry_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="stock"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_medicine_kanban" model="ir.ui.view">
+        <field name="name">pharmacy.medicine.kanban</field>
+        <field name="model">pharmacy.medicine</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="sale_price"/>
+                <field name="stock"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="pharmacy_kanban_card">
+                            <strong class="pharmacy_kanban_title">
+                                <field name="name"/>
+                            </strong>
+                            <div class="pharmacy_kanban_line">
+                                <field name="category_id"/>
+                            </div>
+                            <div class="pharmacy_kanban_line">Price: <field name="sale_price"/>
+                            </div>
+                            <div class="pharmacy_kanban_line">Stock: <field name="stock"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_pharmacy_medicine_search" model="ir.ui.view">
+        <field name="name">pharmacy.medicine.search</field>
+        <field name="model">pharmacy.medicine</field>
+        <field name="arch" type="xml">
+            <search string="Search Medicines">
+                <field name="name"/>
+                <field name="category_id"/>
+                <filter name="low_stock" string="Low Stock" domain="[('stock', '&lt;=', 10)]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_pharmacy_medicine" model="ir.actions.act_window">
+        <field name="name">Medicines</field>
+        <field name="res_model">pharmacy.medicine</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+</odoo>
