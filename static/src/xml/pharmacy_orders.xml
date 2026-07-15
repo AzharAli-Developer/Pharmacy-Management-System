@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="pharmacy_management_system.PharmacyOrders">
-        <div class="pharmacy_order_screen">
-            <div class="pharmacy_order_header">
-                <div class="pharmacy_search_box">
-                    <input type="text" placeholder="Search medicines..." t-att-value="state.search" t-on-input="onSearch"/>
+        <div class="pharmacy_order_screen pharmacy_pos_screen">
+            <div class="pharmacy_pos_header">
+                <div class="pharmacy_search_box pharmacy_pos_search">
+                    <input
+                        t-ref="medicineSearch"
+                        type="text"
+                        placeholder="Search medicine, generic name, code, category..."
+                        t-att-value="state.search"
+                        t-on-input="onSearch"
+                    />
                 </div>
-                <div class="pharmacy_category_filter">
+                <div class="pharmacy_category_filter pharmacy_pos_categories">
+                    <button t-att-class="!state.categoryId ? 'active' : ''" t-on-click="() => this.setCategory(false)">All</button>
                     <t t-foreach="state.categories" t-as="category" t-key="category.id">
                         <button t-att-class="state.categoryId === category.id ? 'active' : ''" t-on-click="() => this.setCategory(category.id)">
                             <t t-esc="category.name"/>
@@ -15,29 +22,58 @@
                 </div>
             </div>
 
-            <div class="pharmacy_order_body">
-                <section class="pharmacy_medicine_panel">
+            <div class="pharmacy_order_body pharmacy_pos_body">
+                <section class="pharmacy_medicine_panel pharmacy_pos_catalog">
+                    <div class="pharmacy_section_header">
+                        <div>
+                            <h3>Medicines</h3>
+                            <p><t t-esc="filteredMedicines.length"/> products found</p>
+                        </div>
+                        <div class="pharmacy_pager" t-if="totalPages > 1">
+                            <button t-on-click="previousPage" t-att-disabled="state.page === 1">Prev</button>
+                            <span><t t-esc="state.page"/> / <t t-esc="totalPages"/></span>
+                            <button t-on-click="nextPage" t-att-disabled="state.page === totalPages">Next</button>
+                        </div>
+                    </div>
+
                     <t t-if="state.loading">
                         <div class="pharmacy_empty_state">Loading medicines...</div>
+                    </t>
+                    <t t-elif="state.error">
+                        <div class="pharmacy_empty_state"><t t-esc="state.error"/></div>
                     </t>
                     <t t-elif="!filteredMedicines.length">
                         <div class="pharmacy_empty_state">No medicines found.</div>
                     </t>
                     <t t-else="">
-                        <div class="pharmacy_medicine_grid">
-                            <t t-foreach="filteredMedicines" t-as="medicine" t-key="medicine.id">
-                                <button class="pharmacy_order_medicine_card" t-on-click="() => this.addToCart(medicine)">
-                                    <div class="pharmacy_order_medicine_name">
-                                        <t t-esc="medicine.name"/>
+                        <div class="pharmacy_medicine_grid pharmacy_pos_grid">
+                            <t t-foreach="pagedMedicines" t-as="medicine" t-key="medicine.id">
+                                <button
+                                    t-att-class="'pharmacy_order_medicine_card pharmacy_pos_product_card stock_' + this.stockTone(medicine)"
+                                    t-on-click="() => this.addToCart(medicine)"
+                                    t-att-disabled="medicine.stock &lt;= 0"
+                                >
+                                    <div class="pharmacy_product_topline">
+                                        <div>
+                                            <div class="pharmacy_order_medicine_name">
+                                                <t t-esc="medicine.name"/>
+                                            </div>
+                                            <div class="pharmacy_order_medicine_category">
+                                                <t t-esc="medicine.generic_name || medicine.category_id[1]"/>
+                                            </div>
+                                        </div>
+                                        <span class="pharmacy_stock_badge">
+                                            <t t-if="medicine.stock &lt;= 0">Out</t>
+                                            <t t-else="">Stock <t t-esc="medicine.stock"/></t>
+                                        </span>
                                     </div>
-                                    <div class="pharmacy_order_medicine_category">
-                                        <t t-esc="medicine.category_id[1]"/>
+                                    <div class="pharmacy_product_meta">
+                                        <span><t t-esc="medicine.category_id[1]"/></span>
+                                        <span t-if="medicine.medicine_code"><t t-esc="medicine.medicine_code"/></span>
                                     </div>
                                     <div class="pharmacy_order_medicine_meta">
-                                        <span>Rs. <t t-esc="medicine.sale_price"/>
-                                        </span>
-                                        <span>Stock: <t t-esc="medicine.stock"/>
-                                        </span>
+                                        <strong><t t-esc="this.formatMoney(medicine.sale_price)"/></strong>
+                                        <span t-if="medicine.expiry_date">Exp <t t-esc="medicine.expiry_date"/></span>
                                     </div>
                                 </button>
                             </t>
@@ -45,65 +81,95 @@
                     </t>
                 </section>
 
-                <aside class="pharmacy_cart_panel">
+                <aside class="pharmacy_cart_panel pharmacy_pos_cart">
                     <div class="pharmacy_cart_title_row">
-                        <div class="pharmacy_cart_title">Current Order</div>
+                        <div>
+                            <div class="pharmacy_cart_title">Current Order</div>
+                            <span class="pharmacy_cart_subtitle"><t t-esc="state.cart.length"/> cart lines</span>
+                        </div>
                         <button class="pharmacy_btn_secondary pharmacy_discount_open" t-on-click="openDiscountModal">Discount</button>
                     </div>
+
                     <input class="pharmacy_customer_input" type="text" placeholder="Customer name" t-model="state.customerName"/>
+                    <div class="pharmacy_customer_suggestions" t-if="state.recentCustomers.length">
+                        <t t-foreach="state.recentCustomers.slice(0, 4)" t-as="customer" t-key="customer">
+                            <button t-on-click="() => this.selectCustomer(customer)">
+                                <t t-esc="customer"/>
+                            </button>
+                        </t>
+                    </div>
 
                     <div class="pharmacy_cart_lines">
                         <t t-if="!state.cart.length">
-                            <div class="pharmacy_cart_empty">Click a medicine to add it to cart.</div>
+                            <div class="pharmacy_cart_empty">Select a medicine to start an order.</div>
                         </t>
                         <t t-foreach="state.cart" t-as="line" t-key="line.medicine_id">
-                            <div class="pharmacy_cart_line">
-                                <div>
-                                    <div class="pharmacy_cart_line_name_row">
-                                        <div class="pharmacy_cart_line_name">
-                                            <t t-esc="line.name"/>
-                                        </div>
+                            <div class="pharmacy_cart_line pharmacy_pos_cart_line">
+                                <div class="pharmacy_cart_line_main">
+                                    <div class="pharmacy_cart_line_name">
+                                        <t t-esc="line.name"/>
                                     </div>
-                                    <div class="pharmacy_cart_line_price">Rs. <t t-esc="line.price"/>
+                                    <div class="pharmacy_cart_line_price">
+                                        <t t-esc="this.formatMoney(line.price)"/> each
                                     </div>
-                                    <input class="pharmacy_line_discount_input" type="number" min="0" placeholder="Item discount" t-att-value="line.discount_amount" t-on-input="(ev) => this.updateLineDiscount(line, ev)"/>
+                                    <input class="pharmacy_line_discount_input" type="number" min="0" placeholder="Discount" t-att-value="line.discount_amount" t-on-input="(ev) => this.updateLineDiscount(line, ev)"/>
                                 </div>
                                 <div class="pharmacy_qty_controls">
-                                    <button t-on-click="() => this.decreaseQty(line)">-</button>
-                                    <span>
-                                        <t t-esc="line.quantity"/>
-                                    </span>
-                                    <button t-on-click="() => this.increaseQty(line)">+</button>
-                                    <button style="color: red;" t-on-click="() => this.removeLine(line)">X</button>
+                                    <button t-on-click="() => this.decreaseQty(line)" title="Decrease">-</button>
+                                    <span><t t-esc="line.quantity"/></span>
+                                    <button t-on-click="() => this.increaseQty(line)" title="Increase">+</button>
+                                    <button class="pharmacy_remove_line" t-on-click="() => this.removeLine(line)" title="Remove">x</button>
                                 </div>
                                 <div class="pharmacy_cart_line_total">
-                                    <span>Total</span>
-                                    <strong>Rs. <t t-esc="getLineTotal(line)"/>
-                                    </strong>
+                                    <span>Line total</span>
+                                    <strong><t t-esc="this.formatMoney(getLineTotal(line))"/></strong>
                                 </div>
                             </div>
                         </t>
                     </div>
 
+                    <div class="pharmacy_payment_box">
+                        <div class="pharmacy_payment_row">
+                            <label>Payment</label>
+                            <select t-model="state.paymentMethod">
+                                <option value="cash">Cash</option>
+                                <option value="card">Card</option>
+                                <option value="mobile">Mobile Wallet</option>
+                            </select>
+                        </div>
+                        <div class="pharmacy_payment_row">
+                            <label>Cash Received</label>
+                            <input type="number" min="0" t-model="state.amountReceived"/>
+                        </div>
+                    </div>
+
                     <div class="pharmacy_cart_footer">
                         <div class="pharmacy_cart_total">
                             <span>Sub-Total</span>
-                            <strong>Rs. <t t-esc="subTotal"/>
-                            </strong>
+                            <strong><t t-esc="this.formatMoney(subTotal)"/></strong>
                         </div>
                         <div class="pharmacy_cart_total">
                             <span>Discount</span>
-                            <strong>Rs. <t t-esc="totalDiscount"/>
-                            </strong>
+                            <strong><t t-esc="this.formatMoney(totalDiscount)"/></strong>
                         </div>
                         <div class="pharmacy_cart_total">
+                            <span>Tax (<t t-esc="state.taxRate"/>%)</span>
+                            <strong><t t-esc="this.formatMoney(taxAmount)"/></strong>
+                        </div>
+                        <div class="pharmacy_cart_total total_due">
                             <span>Total</span>
-                            <strong>Rs. <t t-esc="getTotal"/>
-                            </strong>
+                            <strong><t t-esc="this.formatMoney(getTotal)"/></strong>
+                        </div>
+                        <div class="pharmacy_cart_total" t-if="state.paymentMethod === 'cash'">
+                            <span>Change</span>
+                            <strong><t t-esc="this.formatMoney(changeAmount)"/></strong>
                         </div>
                         <div class="pharmacy_cart_actions">
                             <button class="pharmacy_btn_secondary" t-on-click="cancelOrder">Cancel</button>
-                            <button class="pharmacy_btn_primary" t-on-click="confirmOrder">Confirm Order</button>
+                            <button class="pharmacy_btn_primary" t-on-click="confirmOrder" t-att-disabled="state.confirming">
+                                <t t-if="state.confirming">Confirming...</t>
+                                <t t-else="">Confirm Order</t>
+                            </button>
                         </div>
                     </div>
                 </aside>
@@ -136,7 +202,7 @@
                 <div class="pharmacy_modal_backdrop">
                     <div class="pharmacy_modal pharmacy_confirm_modal">
                         <div class="pharmacy_modal_header">
-                            <h3>Confirm to cancel?</h3>
+                            <h3>Cancel current order?</h3>
                         </div>
                         <div class="pharmacy_modal_actions">
                             <button class="pharmacy_btn_secondary" t-on-click="closeCancelConfirm">No</button>

@@ -6,11 +6,15 @@
         <field name="arch" type="xml">
             <list string="Sales">
                 <field name="name"/>
+                <field name="customer_id"/>
                 <field name="customer_name"/>
                 <field name="sale_date"/>
                 <field name="sub_total_amount"/>
                 <field name="total_discount_amount"/>
+                <field name="tax_amount"/>
                 <field name="total_amount"/>
+                <field name="profit_amount"/>
+                <field name="payment_method"/>
                 <field name="state"/>
             </list>
         </field>
@@ -22,33 +26,57 @@
         <field name="arch" type="xml">
             <form string="Sale">
                 <header>
+                    <button
+                        name="action_confirm_sale"
+                        type="object"
+                        string="Confirm Sale"
+                        class="btn-primary"
+                        invisible="state == 'confirmed'"
+                    />
+                    <button
+                        name="action_create_return"
+                        type="object"
+                        string="Return"
+                        invisible="state != 'confirmed'"
+                    />
                     <button name="action_print_bill" type="object" string="Print Bill" class="btn-primary"/>
                     <button name="action_download_bill" type="object" string="Download Bill"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="customer_id"/>
                             <field name="customer_name"/>
                         </group>
                         <group>
                             <field name="sale_date"/>
-                            <field name="state"/>
+                            <field name="state" readonly="1"/>
                             <field name="sub_total_amount" readonly="1"/>
                             <field name="total_discount_amount" readonly="1"/>
+                            <field name="tax_rate" readonly="state == 'confirmed'"/>
+                            <field name="tax_amount" readonly="1"/>
                             <field name="total_amount" readonly="1"/>
+                            <field name="total_cost" readonly="1"/>
+                            <field name="profit_amount" readonly="1"/>
+                            <field name="payment_method" readonly="state == 'confirmed'"/>
+                            <field name="amount_received" readonly="state == 'confirmed'"/>
+                            <field name="change_amount" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Medicines">
-                            <field name="medicine_ids">
+                            <field name="medicine_ids" readonly="state == 'confirmed'">
                                 <list editable="bottom">
                                     <field name="medicine_id"/>
                                     <field name="quantity"/>
                                     <field name="price"/>
+                                    <field name="cost_price"/>
                                     <field name="discount_amount"/>
                                     <field name="subtotal" readonly="1"/>
                                     <field name="total_amount" readonly="1"/>
+                                    <field name="profit_amount" readonly="1"/>
                                 </list>
                             </field>
                         </page>
@@ -65,6 +93,7 @@
             <kanban>
                 <field name="name"/>
                 <field name="customer_name"/>
+                <field name="customer_id"/>
                 <field name="sub_total_amount"/>
                 <field name="state"/>
                 <field name="total_discount_amount"/>
@@ -92,6 +121,7 @@
         <field name="arch" type="xml">
             <search string="Search Sales">
                 <field name="name"/>
+                <field name="customer_id"/>
                 <field name="customer_name"/>
                 <field name="sale_date"/>
                 <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]"/>

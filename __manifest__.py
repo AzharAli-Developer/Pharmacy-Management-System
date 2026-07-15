@@ -4,6 +4,7 @@
     'category': 'Inventory',
     'summary': 'Handle all pharmacy management operations.',
     'author': 'Azhar Ali',
+    'license': 'LGPL-3',
     'depends': [
         'base',
         'base_setup',
@@ -13,14 +14,20 @@
         'security/security.xml',
         'security/ir.model.access.csv',
 
+        'data/pharmacy_sequence_data.xml',
         'data/pharmacy_dashboard_data.xml',
 
         'views/category_views.xml',
+        'views/customer_views.xml',
         'views/medicine_views.xml',
+        'views/batch_views.xml',
         'views/supplier_views.xml',
         'views/purchase_views.xml',
         'views/sale_views.xml',
+        'views/sale_return_views.xml',
         'views/expense_views.xml',
+        'views/stock_adjustment_views.xml',
+        'views/stock_move_views.xml',
         'views/dashboard_views.xml',
         'views/res_config_settings_views.xml',
         'views/menu_views.xml',

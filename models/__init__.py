@@ -1,5 +1,7 @@
 from . import ai_assistant
+from . import batch
 from . import category
+from . import customer
 from . import dashboard
 from . import expense
 from . import medicine
@@ -7,6 +9,9 @@ from . import purchase
 from . import purchase_lines
 from . import res_config_settings
 from . import sale
+from . import sale_return
 from . import sale_order_lines
+from . import stock_adjustment
+from . import stock_move
 from . import supplier
 from . import period_report_wizard

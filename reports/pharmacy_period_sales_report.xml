@@ -27,6 +27,8 @@
                                 <th>Medicine Record</th>
                                 <th class="text-end">Total Bill</th>
                                 <th class="text-end">Discount</th>
+                                <th class="text-end">Tax</th>
+                                <th class="text-end">Net</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -35,14 +37,15 @@
                                 <td><t t-esc="line['medicines']"/></td>
                                 <td class="text-end"><t t-esc="'%.2f' % line['gross_amount']"/></td>
                                 <td class="text-end"><t t-esc="'%.2f' % line['discount_amount']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % line['tax_amount']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % line['net_amount']"/></td>
                             </tr>
                         </tbody>
                     </table>
                     <div style="margin-top: 18px; text-align: right; font-size: 18px;">
-                        <div><strong>Gross Bill: <t t-esc="'%.2f' % wizard.gross_bill"/></strong></div>
-                        <div><strong>Discount: <t t-esc="'%.2f' % wizard.total_discount"/></strong></div>
-                        <div><strong>Expense: <t t-esc="'%.2f' % wizard.total_expense"/></strong></div>
-                        <div><strong>Total Amount: <t t-esc="'%.2f' % wizard.total_amount"/></strong></div>
+                        <div><strong>Total Sales: <t t-esc="'%.2f' % wizard.total_sales"/></strong></div>
+                        <div><strong>Total Cost: <t t-esc="'%.2f' % wizard.total_cost"/></strong></div>
+                        <div><strong>Total Profit: <t t-esc="'%.2f' % wizard.total_profit"/></strong></div>
                     </div>
                 </div>
             </t>

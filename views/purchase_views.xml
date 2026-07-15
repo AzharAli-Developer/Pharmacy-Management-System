@@ -9,6 +9,9 @@
                 <field name="supplier_id"/>
                 <field name="purchase_date"/>
                 <field name="total_amount"/>
+                <field name="amount_paid"/>
+                <field name="balance_due"/>
+                <field name="payment_status"/>
                 <field name="state"/>
             </list>
         </field>
@@ -19,6 +22,16 @@
         <field name="model">pharmacy.purchase</field>
         <field name="arch" type="xml">
             <form string="Purchase">
+                <header>
+                    <button
+                        name="action_confirm_purchase"
+                        type="object"
+                        string="Confirm Purchase"
+                        class="btn-primary"
+                        invisible="state == 'confirmed'"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
@@ -27,17 +40,22 @@
                         </group>
                         <group>
                             <field name="purchase_date"/>
-                            <field name="state"/>
+                            <field name="state" readonly="1"/>
                             <field name="total_amount" readonly="1"/>
+                            <field name="amount_paid"/>
+                            <field name="balance_due" readonly="1"/>
+                            <field name="payment_status" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Medicines">
-                            <field name="medicine_ids">
+                            <field name="medicine_ids" readonly="state == 'confirmed'">
                                 <list editable="bottom">
                                     <field name="medicine_id"/>
                                     <field name="quantity"/>
                                     <field name="price"/>
+                                    <field name="batch_no"/>
+                                    <field name="expiry_date"/>
                                     <field name="subtotal" readonly="1"/>
                                 </list>
                             </field>

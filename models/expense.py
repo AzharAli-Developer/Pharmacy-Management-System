@@ -1,4 +1,5 @@
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class Expense(models.Model):
@@ -22,3 +23,9 @@ class Expense(models.Model):
     amount = fields.Float(required=True)
     date = fields.Date(default=fields.Date.context_today, required=True)
     notes = fields.Text()
+
+    @api.constrains('amount')
+    def _check_amount(self):
+        for expense in self:
+            if expense.amount < 0:
+                raise ValidationError('Expense amount cannot be negative.')

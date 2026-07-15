@@ -67,8 +67,24 @@
                 <span><t t-esc="'%.2f' % sale.total_discount_amount"/></span>
             </div>
             <div class="row total">
+                <span>Tax</span>
+                <span><t t-esc="'%.2f' % sale.tax_amount"/></span>
+            </div>
+            <div class="row total">
                 <span>Total Bill</span>
                 <span><t t-esc="'%.2f' % sale.total_amount"/></span>
+            </div>
+            <div class="row">
+                <span>Payment</span>
+                <strong><t t-esc="dict(sale._fields['payment_method'].selection).get(sale.payment_method)"/></strong>
+            </div>
+            <div class="row" t-if="sale.amount_received">
+                <span>Received</span>
+                <strong><t t-esc="'%.2f' % sale.amount_received"/></strong>
+            </div>
+            <div class="row" t-if="sale.change_amount">
+                <span>Change</span>
+                <strong><t t-esc="'%.2f' % sale.change_amount"/></strong>
             </div>
             <div class="line"/>
             <div class="center"><strong>Thank you for your visit!</strong></div>

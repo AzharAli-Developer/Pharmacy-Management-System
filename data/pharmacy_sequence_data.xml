@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_pharmacy_sale" model="ir.sequence">
+        <field name="name">Pharmacy Sale</field>
+        <field name="code">pharmacy.sale</field>
+        <field name="prefix">SAL-</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_pharmacy_purchase" model="ir.sequence">
+        <field name="name">Pharmacy Purchase</field>
+        <field name="code">pharmacy.purchase</field>
+        <field name="prefix">PUR-</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_pharmacy_stock_adjustment" model="ir.sequence">
+        <field name="name">Pharmacy Stock Adjustment</field>
+        <field name="code">pharmacy.stock.adjustment</field>
+        <field name="prefix">ADJ-</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_pharmacy_sale_return" model="ir.sequence">
+        <field name="name">Pharmacy Sale Return</field>
+        <field name="code">pharmacy.sale.return</field>
+        <field name="prefix">RET-</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_pharmacy_default_customer" model="ir.sequence">
+        <field name="name">Pharmacy Default Customer</field>
+        <field name="code">pharmacy.customer.default</field>
+        <field name="prefix">Customer</field>
+        <field name="padding">0</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

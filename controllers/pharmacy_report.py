@@ -39,7 +39,7 @@ class PharmacyReportController(http.Controller):
         worksheet.write(1, 2, 'To')
         worksheet.write(1, 3, fields.Date.to_string(wizard.date_to))
 
-        headers = ['Customer Name', 'Medicine Record', 'Total Bill', 'Discount']
+        headers = ['Customer Name', 'Medicine Record', 'Gross Bill', 'Discount', 'Tax', 'Net Bill']
         for col, header in enumerate(headers):
             worksheet.write(3, col, header, header_format)
 
@@ -49,22 +49,21 @@ class PharmacyReportController(http.Controller):
             worksheet.write(row, 1, line['medicines'], text_format)
             worksheet.write(row, 2, line['gross_amount'], money_format)
             worksheet.write(row, 3, line['discount_amount'], money_format)
+            worksheet.write(row, 4, line['tax_amount'], money_format)
+            worksheet.write(row, 5, line['net_amount'], money_format)
             row += 1
 
-        worksheet.write(row, 2, 'Gross Bill', header_format)
-        worksheet.write(row, 3, wizard.gross_bill, money_format)
+        worksheet.write(row, 4, 'Total Sales', header_format)
+        worksheet.write(row, 5, wizard.total_sales, money_format)
         row += 1
-        worksheet.write(row, 2, 'Discount', header_format)
-        worksheet.write(row, 3, wizard.total_discount, money_format)
+        worksheet.write(row, 4, 'Total Cost', header_format)
+        worksheet.write(row, 5, wizard.total_cost, money_format)
         row += 1
-        worksheet.write(row, 2, 'Expense', header_format)
-        worksheet.write(row, 3, wizard.total_expense, money_format)
-        row += 1
-        worksheet.write(row, 2, 'Total Amount', header_format)
-        worksheet.write(row, 3, wizard.total_amount, money_format)
+        worksheet.write(row, 4, 'Total Profit', header_format)
+        worksheet.write(row, 5, wizard.total_profit, money_format)
         worksheet.set_column(0, 0, 22)
         worksheet.set_column(1, 1, 45)
-        worksheet.set_column(2, 3, 16)
+        worksheet.set_column(2, 5, 16)
         workbook.close()
         output.seek(0)
 

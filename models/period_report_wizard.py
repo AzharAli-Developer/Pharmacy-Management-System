@@ -11,8 +11,12 @@ class PharmacyPeriodReportWizard(models.TransientModel):
     total_sale_price = fields.Float(compute='_compute_totals')
     gross_bill = fields.Float(compute='_compute_totals')
     total_discount = fields.Float(compute='_compute_totals')
+    total_tax = fields.Float(compute='_compute_totals')
     total_expense = fields.Float(compute='_compute_totals')
     total_amount = fields.Float(compute='_compute_totals')
+    total_sales = fields.Float(compute='_compute_totals')
+    total_cost = fields.Float(compute='_compute_totals')
+    total_profit = fields.Float(compute='_compute_totals')
 
     @api.constrains('date_from', 'date_to')
     def _check_dates(self):
@@ -50,6 +54,7 @@ class PharmacyPeriodReportWizard(models.TransientModel):
                 'medicines': medicines,
                 'gross_amount': sale.sub_total_amount,
                 'discount_amount': sale.total_discount_amount,
+                'tax_amount': sale.tax_amount,
                 'net_amount': sale.total_amount,
             })
         return lines
@@ -60,17 +65,25 @@ class PharmacyPeriodReportWizard(models.TransientModel):
             if not wizard.date_from or not wizard.date_to:
                 wizard.gross_bill = 0.0
                 wizard.total_discount = 0.0
+                wizard.total_tax = 0.0
                 wizard.total_expense = 0.0
                 wizard.total_amount = 0.0
                 wizard.total_sale_price = 0.0
+                wizard.total_sales = 0.0
+                wizard.total_cost = 0.0
+                wizard.total_profit = 0.0
                 continue
 
             sales = wizard._get_sales()
             expenses = wizard._get_expenses()
             wizard.gross_bill = sum(sales.mapped('sub_total_amount'))
             wizard.total_discount = sum(sales.mapped('total_discount_amount'))
+            wizard.total_tax = sum(sales.mapped('tax_amount'))
             wizard.total_expense = sum(expenses.mapped('amount'))
-            wizard.total_amount = wizard.gross_bill - wizard.total_discount - wizard.total_expense
+            wizard.total_sales = sum(sales.mapped('total_amount'))
+            wizard.total_cost = sum(sales.mapped('total_cost'))
+            wizard.total_profit = wizard.total_sales - wizard.total_cost
+            wizard.total_amount = wizard.total_sales - wizard.total_expense
             wizard.total_sale_price = wizard.total_amount
 
     def action_download_pdf(self):

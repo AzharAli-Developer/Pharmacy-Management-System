@@ -1,89 +1,172 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="pharmacy_management_system.PharmacyDashboard">
-        <div class="pharmacy_dashboard_screen">
-            <t t-if="!state.data">
+        <div class="pharmacy_dashboard_screen pharmacy_dashboard_modern">
+            <t t-if="state.loading and !state.data">
                 <div class="pharmacy_empty_state">Loading dashboard...</div>
             </t>
+            <t t-elif="state.error">
+                <div class="pharmacy_empty_state">
+                    <div>
+                        <strong>Dashboard unavailable</strong>
+                        <div><t t-esc="state.error"/></div>
+                    </div>
+                </div>
+            </t>
             <t t-else="">
-                <div class="pharmacy_dashboard_top">
+                <div class="pharmacy_dashboard_top pharmacy_dashboard_top_modern">
                     <div>
                         <h2>Pharmacy Dashboard</h2>
                     </div>
-
                     <div class="pharmacy_dashboard_filters">
-                        <button class="pharmacy_ai_help_btn" t-on-click="openAiAssistant">Ask AI Assistant</button>
-                        <button t-on-click="openReportPicker">Previous Report</button>
+                        <button class="pharmacy_ai_help_btn" t-on-click="openAiAssistant">Ask AI</button>
+                        <button t-on-click="openReportPicker">Reports</button>
                     </div>
                 </div>
 
-                <div class="pharmacy_stats_grid">
-                    <button class="pharmacy_stat_card" t-on-click="() => this.openAction('categories')">
-                        <span>Categories</span>
-                        <strong>
-                            <t t-esc="state.data.cards.categories"/>
-                        </strong>
+                <div class="pharmacy_kpi_grid">
+                    <button class="pharmacy_kpi_card primary" t-on-click="() => this.openAction('sales')">
+                        <span>Today Sales</span>
+                        <strong><t t-esc="this.formatMoney(state.data.cards.today_sales)"/></strong>
                     </button>
-                    <button class="pharmacy_stat_card" t-on-click="() => this.openAction('medicines')">
-                        <span>Medicines</span>
-                        <strong>
-                            <t t-esc="state.data.cards.medicines"/>
-                        </strong>
-                    </button>
-                    <button class="pharmacy_stat_card" t-on-click="() => this.openAction('sales')">
-                        <span>Orders</span>
-                        <strong>
-                            <t t-esc="state.data.cards.orders"/>
-                        </strong>
-                    </button>
-                    <button class="pharmacy_stat_card" t-on-click="() => this.openAction('suppliers')">
-                        <span>Suppliers</span>
-                        <strong>
-                            <t t-esc="state.data.cards.suppliers"/>
-                        </strong>
-                    </button>
-                    <button class="pharmacy_stat_card" t-on-click="() => this.openAction('expenses')">
+                    <button class="pharmacy_kpi_card expense" t-on-click="() => this.openAction('expenses')">
                         <span>Expenses</span>
-                        <strong>Rs. 
-                            <t t-esc="state.data.cards.expenses"/>
-                        </strong>
+                        <strong><t t-esc="this.formatMoney(state.data.cards.expenses)"/></strong>
+                        <small>Today <t t-esc="this.formatMoney(state.data.cards.today_expenses)"/></small>
                     </button>
-                    <button class="pharmacy_stat_card" t-on-click="() => this.openAction('sales')">
-                        <span>Sales</span>
-                        <strong>Rs. <t t-esc="state.data.cards.sales"/>
-                        </strong>
+                    <button class="pharmacy_kpi_card" t-on-click="() => this.openAction('medicines')">
+                        <span>Medicines</span>
+                        <strong><t t-esc="state.data.cards.medicines"/></strong>
+                    </button>
+                    <button class="pharmacy_kpi_card warning" t-on-click="() => this.openAction('medicines')">
+                        <span>Expiring Soon</span>
+                        <strong><t t-esc="state.data.cards.expiring_soon"/></strong>
+                        <small>Next 15 days</small>
+                    </button>
+                    <button class="pharmacy_kpi_card" t-on-click="() => this.openAction('purchases')">
+                        <span>Purchases</span>
+                        <strong><t t-esc="this.formatMoney(state.data.cards.purchases)"/></strong>
+                        <small><t t-esc="state.data.purchase_summary.count"/> confirmed purchases</small>
+                    </button>
+                    <button class="pharmacy_kpi_card" t-on-click="() => this.openAction('customers')">
+                        <span>Customers</span>
+                        <strong><t t-esc="state.data.cards.customers"/></strong>
+                        <small>Avg bill <t t-esc="this.formatMoney(state.data.customer_summary.average_bill)"/></small>
                     </button>
                 </div>
 
-                <div class="pharmacy_dashboard_content">
-                    <section class="pharmacy_dashboard_section">
-                        <h3>Daily Medicine Sales</h3>
-                        <div class="pharmacy_sales_chart pharmacy_chartjs_wrap">
-                            <canvas t-ref="salesChart"></canvas>
+                <div class="pharmacy_quick_actions">
+                    <button class="pharmacy_action_tile order" t-on-click="() => this.openAction('orders')">
+                        <i class="fa fa-shopping-cart"/>
+                        <span>Order Medicine</span>
+                    </button>
+                    <button class="pharmacy_action_tile medicine" t-on-click="() => this.openAction('medicines')">
+                        <i class="fa fa-medkit"/>
+                        <span>Add New Medicine</span>
+                    </button>
+                    <button class="pharmacy_action_tile purchase" t-on-click="() => this.openAction('purchases')">
+                        <i class="fa fa-truck"/>
+                        <span>Purchase Medicine</span>
+                    </button>
+                    <button class="pharmacy_action_tile stock" t-on-click="() => this.openAction('stock_moves')">
+                        <i class="fa fa-clipboard"/>
+                        <span>Stock Audit</span>
+                    </button>
+                    <button class="pharmacy_action_tile expense" t-on-click="() => this.openAction('expenses')">
+                        <i class="fa fa-credit-card"/>
+                        <span>Add Expense</span>
+                    </button>
+                </div>
+
+                <div class="pharmacy_dashboard_widgets">
+                    <section class="pharmacy_dashboard_section pharmacy_dashboard_widget">
+                        <div class="pharmacy_section_header">
+                            <div>
+                                <h3>Best Selling Medicines</h3>
+                            </div>
+                        </div>
+                        <div class="pharmacy_rank_list pharmacy_scroll_list">
+                            <t t-if="!state.data.best_sellers.length">
+                                <div class="pharmacy_empty_state compact">No sales found.</div>
+                            </t>
+                            <t t-foreach="state.data.best_sellers" t-as="item" t-key="item.medicine_id || item.name">
+                                <button class="pharmacy_rank_row" t-on-click="() => item.medicine_id &amp;&amp; this.openMedicine(item.medicine_id)">
+                                    <span><t t-esc="item.name"/></span>
+                                    <strong><t t-esc="item.quantity"/> sold</strong>
+                                    <small><t t-esc="this.formatMoney(item.amount)"/></small>
+                                </button>
+                            </t>
                         </div>
                     </section>
 
-                    <div class="pharmacy_expiry_grid">
-                        <section class="pharmacy_dashboard_section">
-                            <h3>Expired Medicines</h3>
-                            <t t-call="pharmacy_management_system.MedicineExpiryList">
-                                <t t-set="rows" t-value="state.data.expired"/>
+                    <section class="pharmacy_dashboard_section pharmacy_dashboard_widget">
+                        <div class="pharmacy_section_header">
+                            <div>
+                                <h3>Recent Orders</h3>
+                            </div>
+                        </div>
+                        <div class="pharmacy_table_like pharmacy_scroll_list">
+                            <t t-if="!state.data.recent_orders.length">
+                                <div class="pharmacy_empty_state compact">No recent orders.</div>
                             </t>
-                        </section>
-                        <section class="pharmacy_dashboard_section">
-                            <h3>Expiry Soon</h3>
-                            <t t-call="pharmacy_management_system.MedicineExpiryList">
-                                <t t-set="rows" t-value="state.data.expiring_soon"/>
+                            <t t-foreach="state.data.recent_orders" t-as="order" t-key="order.id">
+                                <button class="pharmacy_order_row" t-on-click="() => this.openSale(order.id)">
+                                    <div>
+                                        <strong><t t-esc="order.name"/></strong>
+                                        <span><t t-esc="order.customer"/></span>
+                                    </div>
+                                    <div>
+                                        <strong><t t-esc="this.formatMoney(order.total_amount)"/></strong>
+                                        <span><t t-esc="order.items"/> items</span>
+                                    </div>
+                                </button>
                             </t>
-                        </section>
-                    </div>
+                        </div>
+                    </section>
+
+                    <section class="pharmacy_dashboard_section pharmacy_dashboard_widget">
+                        <div class="pharmacy_section_header">
+                            <div>
+                                <h3>Low Stock</h3>
+                            </div>
+                        </div>
+                        <t t-call="pharmacy_management_system.MedicineSignalList">
+                            <t t-set="rows" t-value="state.data.low_stock"/>
+                            <t t-set="mode" t-value="'stock'"/>
+                        </t>
+                    </section>
+
+                    <section class="pharmacy_dashboard_section pharmacy_dashboard_widget">
+                        <div class="pharmacy_section_header">
+                            <div>
+                                <h3>Expiry Watch</h3>
+                            </div>
+                        </div>
+                        <t t-call="pharmacy_management_system.MedicineSignalList">
+                            <t t-set="rows" t-value="state.data.expiring_soon"/>
+                            <t t-set="mode" t-value="'expiry'"/>
+                        </t>
+                    </section>
                 </div>
+
+                <section class="pharmacy_dashboard_section pharmacy_dashboard_chart_section">
+                    <div class="pharmacy_section_header">
+                        <div>
+                            <h3>Sales Analytics</h3>
+                            <p>Last 14 days sales</p>
+                        </div>
+                        <strong><t t-esc="this.formatMoney(state.data.cards.week_sales)"/></strong>
+                    </div>
+                    <div class="pharmacy_sales_chart pharmacy_chartjs_wrap">
+                        <canvas t-ref="salesChart"></canvas>
+                    </div>
+                </section>
 
                 <t t-if="state.showReportPicker">
                     <div class="pharmacy_modal_backdrop">
                         <div class="pharmacy_modal pharmacy_report_modal">
                             <div class="pharmacy_modal_header">
-                                <h3>Previous Report</h3>
+                                <h3>Sales Report</h3>
                                 <button class="pharmacy_icon_btn" t-on-click="closeReportModal">x</button>
                             </div>
                             <t t-if="!state.showCustomReport and !state.report">
@@ -91,14 +174,14 @@
                                     <button t-on-click="() => this.setPeriod('today')">1 Day</button>
                                     <button t-on-click="() => this.setPeriod('7')">7 Days</button>
                                     <button t-on-click="() => this.setPeriod('30')">30 Days</button>
-                                    <button t-on-click="chooseCustom">Custom</button>
+                                    <button t-on-click="chooseCustom">Custom Days</button>
                                 </div>
                             </t>
                             <t t-if="state.showCustomReport and !state.report">
                                 <div class="pharmacy_custom_report_form">
                                     <input type="date" t-model="state.startDate"/>
                                     <input type="date" t-model="state.endDate"/>
-                                    <button class="pharmacy_btn_primary" t-on-click="applyCustom">Enter</button>
+                                    <button class="pharmacy_btn_primary" t-on-click="applyCustom">Generate</button>
                                 </div>
                             </t>
                             <t t-if="state.report">
@@ -112,40 +195,40 @@
                                         <table class="pharmacy_report_table">
                                             <thead>
                                                 <tr>
-                                                    <th>Customer Name</th>
-                                                    <th>Medicine Record</th>
-                                                    <th>Total Bill</th>
+                                                    <th>Customer</th>
+                                                    <th>Medicines</th>
+                                                    <th>Gross</th>
                                                     <th>Discount</th>
+                                                    <th>Net</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr t-if="!state.report.lines.length">
-                                                    <td colspan="4">No sales found.</td>
+                                                    <td colspan="5">No sales found.</td>
                                                 </tr>
                                                 <tr t-foreach="state.report.lines" t-as="line" t-key="line.sale_name">
                                                     <td><t t-esc="line.patient"/></td>
                                                     <td><t t-esc="line.medicines"/></td>
-                                                    <td>Rs. <t t-esc="line.gross_amount"/></td>
-                                                    <td>Rs. <t t-esc="line.discount_amount"/></td>
+                                                    <td><t t-esc="this.formatMoney(line.gross_amount)"/></td>
+                                                    <td><t t-esc="this.formatMoney(line.discount_amount)"/></td>
+                                                    <td><t t-esc="this.formatMoney(line.net_amount)"/></td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="pharmacy_report_total">
-                                        <span>Gross Bill</span>
-                                        <strong>Rs. <t t-esc="state.report.gross_bill"/></strong>
-                                    </div>
-                                    <div class="pharmacy_report_total">
-                                        <span>Discount</span>
-                                        <strong>Rs. <t t-esc="state.report.total_discount"/></strong>
-                                    </div>
-                                    <div class="pharmacy_report_total">
-                                        <span>Expense</span>
-                                        <strong>Rs. <t t-esc="state.report.total_expense"/></strong>
-                                    </div>
-                                    <div class="pharmacy_report_total">
-                                        <span>Total Amount</span>
-                                        <strong>Rs. <t t-esc="state.report.total_amount"/></strong>
+                                    <div class="pharmacy_report_summary">
+                                        <div class="pharmacy_report_total">
+                                            <span>Total Sales</span>
+                                            <strong><t t-esc="this.formatMoney(state.report.total_sales)"/></strong>
+                                        </div>
+                                        <div class="pharmacy_report_total">
+                                            <span>Total Cost</span>
+                                            <strong><t t-esc="this.formatMoney(state.report.total_cost)"/></strong>
+                                        </div>
+                                        <div class="pharmacy_report_total">
+                                            <span>Total Profit</span>
+                                            <strong><t t-esc="this.formatMoney(state.report.total_profit)"/></strong>
+                                        </div>
                                     </div>
                                     <div class="pharmacy_modal_actions">
                                         <button class="pharmacy_btn_secondary" t-on-click="() => this.downloadReport('xlsx')">Download Excel</button>
@@ -191,29 +274,26 @@
         </div>
     </t>
 
-    <t t-name="pharmacy_management_system.MedicineExpiryList">
+    <t t-name="pharmacy_management_system.MedicineSignalList">
         <t t-if="!rows.length">
-            <div class="pharmacy_empty_state">No medicines found.</div>
+            <div class="pharmacy_empty_state compact">No medicines found.</div>
         </t>
         <t t-else="">
-            <div class="pharmacy_expiry_list">
+            <div class="pharmacy_signal_list pharmacy_scroll_list">
                 <t t-foreach="rows" t-as="medicine" t-key="medicine.id">
-                    <button class="pharmacy_expiry_row" t-on-click="() => this.openMedicine(medicine.id)">
+                    <button class="pharmacy_signal_row" t-on-click="() => this.openMedicine(medicine.id)">
                         <div>
-                            <strong>
-                                <t t-esc="medicine.name"/>
-                            </strong>
-                            <span>
-                                <t t-esc="medicine.category"/>
-                            </span>
+                            <strong><t t-esc="medicine.name"/></strong>
+                            <span><t t-esc="medicine.category"/></span>
                         </div>
                         <div>
-                            <span>
-                                <t t-esc="medicine.expiry_date"/>
-                            </span>
-                            <small>
-                                <t t-esc="medicine.remaining_days"/>
-days</small>
+                            <t t-if="mode === 'stock'">
+                                <strong>Stock <t t-esc="medicine.stock"/></strong>
+                            </t>
+                            <t t-else="">
+                                <strong><t t-esc="medicine.expiry_date"/></strong>
+                                <span><t t-esc="medicine.remaining_days"/> days</span>
+                            </t>
                         </div>
                     </button>
                 </t>

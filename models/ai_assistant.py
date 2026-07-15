@@ -15,6 +15,7 @@ class PharmacyAiAssistant(models.AbstractModel):
     _description = 'Pharmacy AI Assistant'
 
     HF_API_URL = "https://router.huggingface.co/v1/chat/completions"
+    DEFAULT_HF_MODEL = 'meta-llama/Llama-3.1-8B-Instruct:novita'
 
     @api.model
     def chat(self, message, history=None):
@@ -30,7 +31,7 @@ class PharmacyAiAssistant(models.AbstractModel):
 
         model = self.env['ir.config_parameter'].sudo().get_param(
             'pharmacy_management_system.hf_model',
-            'meta-llama/Meta-Llama-3-8B-Instruct:novita'
+            self.DEFAULT_HF_MODEL,
         )
 
         if not token:
@@ -67,7 +68,7 @@ Database Context:
         }]
 
         for item in history[-8:]:
-            if item.get("role") and item.get("content"):
+            if item.get("role") in ["user", "assistant"] and item.get("content"):
                 messages.append({
                     "role": item["role"],
                     "content": item["content"],
@@ -110,8 +111,25 @@ Database Context:
 
         except urllib.error.HTTPError as error:
             details = error.read().decode("utf-8", errors="ignore")
-            _logger.exception(details)
-            raise UserError("HuggingFace API request failed.")
+            _logger.error(
+                "Hugging Face request failed for model %s (HTTP %s): %s",
+                model,
+                error.code,
+                details,
+            )
+            try:
+                provider_error = json.loads(details)
+                reason = provider_error.get('message') or provider_error.get('reason')
+            except (TypeError, ValueError):
+                reason = False
+
+            if reason:
+                raise UserError(
+                    f'Hugging Face rejected model "{model}": {reason}'
+                )
+            raise UserError(
+                f'Hugging Face API request failed with HTTP {error.code}.'
+            )
 
         except urllib.error.URLError:
             raise UserError("Could not connect to HuggingFace API.")
@@ -128,11 +146,20 @@ Database Context:
     def _build_database_context(self, message):
         context = []
         msg = message.lower()
+        keywords = self._extract_keywords(msg)[:8]
 
         medicines = self.env['pharmacy.medicine'].search([], limit=200)
 
         matched_medicines = medicines.filtered(
-            lambda med: med.name and msg in med.name.lower()
+            lambda med: any(
+                keyword in ' '.join([
+                    med.name or '',
+                    med.generic_name or '',
+                    med.medicine_code or '',
+                    med.category_id.name or '',
+                ]).lower()
+                for keyword in keywords
+            )
         )
 
         if matched_medicines:
@@ -156,7 +183,7 @@ Database Context:
                     f"""
     Sale Record:
     Sale No: {sale.name}
-    Customer: {sale.customer_name}
+    Customer: {'Recorded' if sale.customer_name else 'Walk-in'}
     Total Amount: {sale.total_amount}
     """
                 )

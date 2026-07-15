@@ -45,22 +45,16 @@
         parent="menu_pharmacy_root"
         action="action_pharmacy_supplier"
         sequence="30"
+        active="False"
     />
 
     <menuitem
-        id="menu_pharmacy_purchase"
-        name="Purchases"
+        id="menu_pharmacy_customer"
+        name="Customers"
         parent="menu_pharmacy_root"
-        action="action_pharmacy_purchase"
-        sequence="40"
-    />
-
-    <menuitem
-        id="menu_pharmacy_sale"
-        name="Sales"
-        parent="menu_pharmacy_root"
-        action="action_pharmacy_sale"
-        sequence="50"
+        action="action_pharmacy_customer"
+        sequence="35"
+        active="False"
     />
 
     <menuitem
@@ -70,4 +64,52 @@
         action="action_pharmacy_expense"
         sequence="60"
     />
+
+    <record id="menu_pharmacy_batches" model="ir.ui.menu">
+        <field name="name">Batches</field>
+        <field name="parent_id" ref="menu_pharmacy_root"/>
+        <field name="action" ref="action_pharmacy_medicine_batch"/>
+        <field name="sequence">22</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_pharmacy_purchase" model="ir.ui.menu">
+        <field name="name">Purchases</field>
+        <field name="parent_id" ref="menu_pharmacy_root"/>
+        <field name="action" ref="action_pharmacy_purchase"/>
+        <field name="sequence">40</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_pharmacy_sale" model="ir.ui.menu">
+        <field name="name">Sales</field>
+        <field name="parent_id" ref="menu_pharmacy_root"/>
+        <field name="action" ref="action_pharmacy_sale"/>
+        <field name="sequence">50</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_pharmacy_sale_return" model="ir.ui.menu">
+        <field name="name">Returns</field>
+        <field name="parent_id" ref="menu_pharmacy_root"/>
+        <field name="action" ref="action_pharmacy_sale_return"/>
+        <field name="sequence">52</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_pharmacy_stock_move" model="ir.ui.menu">
+        <field name="name">Stock Moves</field>
+        <field name="parent_id" ref="menu_pharmacy_root"/>
+        <field name="action" ref="action_pharmacy_stock_move"/>
+        <field name="sequence">55</field>
+        <field name="active" eval="False"/>
+    </record>
+
+    <record id="menu_pharmacy_stock_adjustment" model="ir.ui.menu">
+        <field name="name">Stock Adjustments</field>
+        <field name="parent_id" ref="menu_pharmacy_root"/>
+        <field name="action" ref="action_pharmacy_stock_adjustment"/>
+        <field name="sequence">56</field>
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

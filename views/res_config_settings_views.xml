@@ -23,6 +23,15 @@
                         <field name="pharmacy_hf_model"/>
                     </setting>
                 </block>
+                <block title="Pharmacy POS" name="pharmacy_pos_settings_container">
+                    <setting
+                        id="pharmacy_default_tax_rate"
+                        string="Default POS Tax Rate"
+                        help="Percentage tax applied by default on new POS orders. Keep 0 if taxes are not used."
+                    >
+                        <field name="pharmacy_default_tax_rate"/>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>

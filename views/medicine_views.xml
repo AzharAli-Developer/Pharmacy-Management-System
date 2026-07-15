@@ -6,9 +6,12 @@
         <field name="arch" type="xml">
             <list string="Medicines">
                 <field name="name"/>
+                <field name="generic_name"/>
                 <field name="category_id"/>
+                <field name="medicine_code"/>
                 <field name="sale_price"/>
                 <field name="stock"/>
+                <field name="reorder_level"/>
                 <field name="expiry_date"/>
             </list>
         </field>
@@ -23,10 +26,15 @@
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="generic_name"/>
+                            <field name="manufacturer"/>
+                            <field name="medicine_code"/>
                             <field name="category_id"/>
                         </group>
                         <group>
+                            <field name="cost_price"/>
                             <field name="sale_price"/>
+                            <field name="reorder_level"/>
                             <field name="expiry_date"/>
                         </group>
                     </group>
@@ -38,6 +46,11 @@
                             <field name="description"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Batches">
+                            <field name="batch_ids" readonly="1"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
@@ -49,7 +62,9 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="name"/>
+                <field name="generic_name"/>
                 <field name="category_id"/>
+                <field name="medicine_code"/>
                 <field name="sale_price"/>
                 <field name="stock"/>
                 <templates>
@@ -61,6 +76,7 @@
                             <div class="pharmacy_kanban_line">
                                 <field name="category_id"/>
                             </div>
+                            <div class="pharmacy_kanban_line"><field name="generic_name"/></div>
                             <div class="pharmacy_kanban_line">Price: <field name="sale_price"/>
                             </div>
                             <div class="pharmacy_kanban_line">Stock: <field name="stock"/>
@@ -78,8 +94,11 @@
         <field name="arch" type="xml">
             <search string="Search Medicines">
                 <field name="name"/>
+                <field name="generic_name"/>
+                <field name="medicine_code"/>
                 <field name="category_id"/>
                 <filter name="low_stock" string="Low Stock" domain="[('stock', '&lt;=', 10)]"/>
+                <filter name="expired" string="Expired" domain="[('expiry_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_category" string="Category" context="{'group_by': 'category_id'}"/>
                 </group>
